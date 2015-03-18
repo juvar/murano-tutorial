@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# MuranoTutorial build configuration file, created by
-# ReST Editor on Mar 17, 2015
+# murano-tutorial build configuration file, created by
+# ReST Editor on Mar 18, 2015
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -44,9 +44,9 @@ master_doc = u'index'
 
 
 # General information about the project.
-project = u'MuranoTutorial'
+project = u'murano-tutorial'
 
-copyright = u'2015, Julia Varigina, George Okrokvertskhov'
+copyright = u'2015, Julia Varigina, Georgiy Okrokvertskhov'
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -175,7 +175,7 @@ html_static_path = [u'_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MuranoTutorialdoc'
+htmlhelp_basename = 'murano-tutorialdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -190,7 +190,7 @@ latex_font_size = u'10pt'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-latex_documents = [('index', 'MuranoTutorial.tex', u'MuranoTutorial Documentation', u'Julia Varigina, George Okrokvertskhov', 'manual')]
+latex_documents = [('index', 'murano-tutorial.tex', u'murano-tutorial Documentation', u'Julia Varigina, Georgiy Okrokvertskhov', 'manual')]
 
 
 # A dictionary that contains LaTeX snippets that override those Sphinx usually 
@@ -227,7 +227,7 @@ latex_use_parts = False
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'MuranoTutorial', u'MuranoTutorial Documentation', [u'Julia Varigina, George Okrokvertskhov'], 1)]
+man_pages = [('index', 'murano-tutorial', u'murano-tutorial Documentation', [u'Julia Varigina, Georgiy Okrokvertskhov'], 1)]
 
 
 # -- Additional options --------------------------------------------------------
