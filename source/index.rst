@@ -1,0 +1,22 @@
+.. MuranoTutorial Documentation master file.
+
+#########################################
+Welcome to MuranoTutorial's Documentation
+#########################################
+
+.. toctree::
+   :maxdepth: 2
+   
+   introduction
+   real_life_murano_application   
+   troubleshooting
+   murano_vs_heat
+   murano_tools
+   murano_pl_specification
+   other_murano_resources
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
