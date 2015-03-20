@@ -1,32 +1,70 @@
-Introduction to Murano
-======================
+Murano Overview
+===============
  
-What I can do with Murano
--------------------------
+Introduction
+------------
+.. todo:: Find out how to fix text width
 
-| Murano is an application catalog. 
-| It provides user-friendly interface and gives you opportunity to interact with different cloud-ready applications.
+Murano is an application catalog project on OpenStack. This project is completely open source and managed
+according OpenStack community rules.
 
-| Murano has a UI plugin for OPenstack Horizon dashbord called Murano dashboard.
-| This is how Murano web interface looks like:
+.. note:: **Murano mission statement from OpenStack wiki**
+
+   The Murano Project introduces an application catalog to OpenStack, enabling application developers and cloud
+   administrators to publish various cloud-ready applications in a browsable categorized catalog.
+   Cloud users can then use the catalog to compose reliable application environments with the push of a button.
+
+
+The key goal is to provide UI and API which allows to compose and deploy composite environments on the Application
+abstraction level and then manage their lifecycle. Murano is focused on user experience and provides an easy way to
+browse application catalog, find and filter applications in it by browsing via categories or by using free text search.
+
+What is Murano Application
+--------------------------
+
+Murano application is a set of application binaries, scripts, workflows and UI definitions to install and manage an
+arbitrary software like Tomcat, MySQL, Windows ActiveDirectory  on top of VM or on a bare metal server. Workflows
+usually contain a set of instructions to provision OpenStack resources: VMs, networks, subnets, floating IPs and volumes.
+As soon as infrastructure resources are provisioned Murano workflows will orchestrate software components installation.
+It is important to node that Heat is used for OpenStack resource provisioned and it also can be used for software
+components installation via Heat Software orchestration.
+
+Quick UI Overview
+-----------------
+
+The main Murano UI page is an Application Catalog page where users can browse applications available for the tenant.
 
 .. todo:: insert image here
 
-| This is the catalog of all applications available in your tenant.
-| Each application has a name, short description, detailed information.
-| Let's take a look at the Tomcat application:
+Each application tile has an icon, a name, short description and detailed information. There are also two buttons on each application
+tile which defines actions which you can immedeately do with the application. Details link leads to the detailed
+application description page where users can find more information about the application.
+
+.. todo:: add environment page screen and desription
+
+.. todo:: add package management page description
+
+Quick Deploy
+------------
+Let's take a look at the Tomcat application:
 
 .. todo:: insert image here
 
 When you deploy it, it will create a new instance, configure its security group rules, and install Tomcat on it. 
 
 
-| You can create your own Murano application, package it as zip archive and upload to Murano.
-| The source code of your application packaged as zip archive is called package. 
-| Once uploaded,  your application is immediately availale in the application catalog. (see the screenshot #1) 
+.. todo:: Further Reading
+  .. link to Application Creation Section
+  .. link to app Packages management
+  .. link
+.. todo:: End Introduction here
 
-| Package management is available in definitions panel.
-| This is the interface for application publisher and catalog administrator
+You can create your own Murano application, package it as zip archive and upload to Murano.
+The source code of your application packaged as zip archive is called package.
+Once uploaded,  your application is immediately availale in the application catalog. (see the screenshot #1)
+
+Package management is available in definitions panel.
+This is the interface for application publisher and catalog administrator
 
 .. todo:: insert image here
 
