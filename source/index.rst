@@ -5,9 +5,10 @@ Welcome to MuranoTutorial's Documentation
 #########################################
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    introduction
+   simple_vm_application
    real_life_murano_application   
    troubleshooting
    murano_vs_heat
