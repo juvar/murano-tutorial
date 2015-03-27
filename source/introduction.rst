@@ -42,23 +42,26 @@ components installation via Heat Software orchestration.
 Each application tile has an icon, a name, short description and detailed information. There are also two buttons on each 
 application tile which defines actions which you can immedeately do with the application. 
 Details link leads to the detailed application description page where users can find more information about the application.
-Let's take a look at the ``Tomcat`` application:
-When you deploy it, it will create a new instance, configure its security group rules, and install Tomcat on it. 
+
+Let's take a look at the Details page of ``Tomcat`` application:
+This application is responsible for creating a new instance, configuring its security group rules, and installing Tomcat on it. 
 
 .. image:: images/tomcat_details.png
 
-Let's take a closer look at the details of Tomcat application.
-The most interesting part of it is ``Categories: Web``
+The most interesting parts of it are ``Categories: Web`` and ``Tags: Servlets, Server, Pages, Java``
 
-Application Category is a marker, which you can search an application by.
+Both application Categories and Tags are a markers, which you can search an application by.
+The difference between them is that Tags are set by Application developer, 
+while Categories are managed by Murano Administrator.
+
+For example if you need a database, you may search the Application catalog by the category 'Database'.
+The search may return such applications as MySQL, PostgreSQL, etc.
+
+
 The full list of Categories is:
 
 .. image:: images/qa_env_categories.png
 
-For example if you need a database, you may search the Application catalog by the category 'Database'.
-The search may return yousuch applications as MySQL, PostgreSQL, etc.
-
-.. todo:: Categories vs Tags
 
 Environments
 ~~~~~~~~~~~~
@@ -69,17 +72,26 @@ while applications in different environmetns are always independent from each ot
 Environment is a logical agregation of multiple applications that binds them together.
 
 
-The best way to understand what environment is, it to look at the example. 
-Let's say that we have the famous Petstore application. It is a web application that requires a Web Server, such as Tomcat
-and a database, such as PostgreSQL. Let's suppose that we have a QA team and a UAT group of end users.
-QA team needs to test Petsore weekly releases, UAT group ig going to work with a stable version of Petstore for a month 
-and provide a feedback about user experience. 
-In a situation like that, we need to have two separate installations of Petstore. 
-QA team needs their own Tomcat, PostgreSQL databsase and Petstore_SNAPSHOT_1.1.X.war.
-UAT team needs separate Tomcat, separate database, to test their own Petstore_RELEASE_1.0.war.
-QA deployment is completely independent from UAT deployment.
+The best way to understand what environment is, is it to look at the example. 
 
-That's why we will create two environments: one for QA, the other one for UAT.
+*Let's say that we have a QA team that needs to test famous Petstore web-application. 
+Petstore needs to be deployed on a Web Server, such as Tomcat. It also stores and retrieves data from
+a database, such as PostgreSQL. QA team performs weekly tests on in-development version 1.1.X: 
+Petstore_SNAPSHOT_1.1.X.war.*
+
+*Let's suppose that we also have a UAT group of end users.
+UAT group is going to work with a stable release of Petstore v. 1.0: Petstore_RELEASE_1.0.war for duration of a month 
+and provide a feedback about user experience.*
+
+In a situation like that, we need to have two separate installations of Petstore. 
+QA team needs their own QA infrastructure that consists of dedicated Tomcat and PostgreSQL servers.
+UAT team needs separate from QA, independent infrastructure, that also consists of Tomcat and PostgreSQL servers.
+
+While QA Tomcat interacts with QA PostgreSQL, QA servers are unaware of UAT servers, and vice versa.
+QA and UAT infrastructures are completely independent from each other.
+
+In the situation like that we will create two Murano environments: one for QA, the other one for UAT.
+
 Environments panel has a "Create environment" button, that creates environments. 
 
 .. image:: images/environments.png
@@ -87,21 +99,25 @@ Environments panel has a "Create environment" button, that creates environments.
 * ``env-petstore-qa`` is a QA environment
 * ``env-petstore-uat`` ia a UAT environment
 
-You may click on the name the environment to view what applications is consists of. 
-Newly created environment is empty. It has nothing except the name. 
+At this stage these environments are mere configuration within Murano.
+
+You may click on the name the environment to view what applications it consists of. 
+Newly created environment is empty. It has nothing except for its name. 
+
 
 .. image:: images/qa_env_empty.png
 
-Oncce the environment is created, we can add both Tomcat and PostgreSQL applications to it.
+Once the environment is created, we can add both Tomcat and PostgreSQL applications to it.
 Click on the "Add Component" button, and select Tomcat application, and enter parameters for Tomcat application.
-These parameters varies from application to applcation. Most of the applications asks name, instance flavor, instance image, etc.
-Database will ask you to set  the username and password.  
+These parameters vary from application to applcation. Most of the applications ask name, instance flavor, 
+instance image, etc. Database will probably ask you to set the username and password.  
 
 .. image:: images/add_tomcat_1.png
 
-.. warning:: Always select instance image that come with pre-installed murano agent. Read more on this in 
+.. warning:: Always select instance image that comes with pre-installed murano agent. Read more on this here: :ref:`images_label` 
 
-.. todo:: add link to images
+Usually the name of the image itself implies that it is Murano-ready, as it is shown in the screenshot below.
+The image we use for the example is *"Ubuntu 14.04 LTS x64 (pre installed murano agent)"*
 
 .. image:: images/add_tomcat_2.png
 
@@ -112,7 +128,7 @@ Once Tomcat and PostgresQL applications are added to the env-petstore-qa, the st
 
 By this moment we have completely specified the configuration of the QA Environment, 
 but nothing has been created yet.
-We need to deploy the enviromnent so that to bring to the life this configuration.
+We need to deploy the enviromnent so that to bring to life this configuration.
 Let's click "Deploy The Environment" button to start the deployment.
 
 .. image:: images/qa_env_deploy_inprogress.png
@@ -131,19 +147,21 @@ it sends the status update messages to murano dashboard.
 Now we have QA Tomcat and QA Postgres machines created.
 
 To create UAT infactructure, we need to repeat the steps for ``env-petstore-uat``:
-Add Tomcat and Postgres applocations to it and deploy the ``env-petstore-uat`` environment.
+add Tomcat and Postgres applications to it and deploy the ``env-petstore-uat`` environment.
 
-.. todo:: add link to non-murano UI
+When environments deployments are completed, you may use regular :ref:`non_murano_ui_label` to verify 
+what instances has been created and how they are configured. 
+
 
 Packages
 ~~~~~~~~
 
-Every Murano application has a source code and resources (such as bash scripts, rpm packages, etc.)
+Every Murano application has a source code and resources (such as bash scripts, software binary distributives, etc.)
 If the source code and the resources are organized into specific folder structure and packaged as zip archive
 this zip archive is called **Murano Package**.  
 
 Murano Dashboard offers Package Definitions tab, that allows to manage Murano Packages. 
-This is the interface for application publisher and catalog administrator
+This is the interface for application publisher and catalog administrator.
 
 .. image:: images/packages.png
 
@@ -152,49 +170,76 @@ You can create your own Murano application, package it as zip archive upload to 
 Once uploaded,  your application is immediately availale in the application catalog. 
 
 This interface allows you to download any package as well. 
-This is a very useful if you are starting to develope your own application, because 
+This is a very useful if you are starting to develop your own application, because 
 you may look how every application is done and create your own application based on the complex application 
 that is already present in the catalog.
+
+For more information about packages, read :ref:`what_is_inside_package_label`
+
+
+.. _images_label:
 
 Images
 ~~~~~~
 
 Every instance (aka virtual machine) that is created by Murano Application, must me Murano-aware.
 It must have a special Murano component called Murano agent installed on it.
-That's why Murano provides build-in Operationg System images that have pre-installed murano agent. 
+
+.. todo:: verify That's why Murano provides build-in Operationg System images that have pre-installed murano agent. 
+
 If a Murano application offers you to select an image, it is obligatory to select an image that has murano agent.
 
-Images panel offers functionality, that manages murano images. 
+Images panel displays all the Murano-enabled images:
 
 .. image:: images/images.png
 
-.. todo:: add more details
+All the image-related activities on Murano-enables images should be performed via Glance interface 
+exaclty the same way as it is performmed on all other images. 
+The only functionality offred by Image panel is to mark/ unmark an image as Murano image.
+Technically this is done by addind/removing special metadata to an image. 
+
+.. _non_murano_ui_label:
 
 Non-Murano UI related to Murano
 -------------------------------
 
 Instances
 ~~~~~~~~~
-After deployment is completed, you can use Instances tab to verify that the  instances (aka virtual machines) are created. 
+
+After your environment is deployed, you may use regular Horizon UI so that to verify what instances were created.
+
+Go to Project -> Compute -> Instances
+
+The screenshot below displays instances created by Deployment of QA environment:
+
 .. image:: images/qa_instances.png
+
+When both QA and UAT environments are deployed, you will see 2 more instances:
+
+.. image:: images/qa_uat_instances.png
+
 
 Network Topology
 ~~~~~~~~~~~~~~~~
 
+The other interesting panel is Network Topology (Project -> Network -> Network Topology). 
+After both QA and UAT environments are deployed, you will see network topology which is similar to this:
+
 .. image:: images/network_topology.png
 
+Note that QA and UAT machines share different subnets.
 
 Stacks
 ~~~~~~
-..todo:: How to use Stacks?
 
+The Stacks panel will give you a complete report of all the entities created in OS when you deployedyour environment.
+
+.. image:: images/stacks.png
 
  
-
-| 
+ 
 | on Murano topology page
 
-.. image:: images/qa_env_topology.png
 .. image:: images/qa_env_after_deployed.png
 .. image:: images/qa_env_deployments_history.png
 .. image:: images/qa_env_deployment_logs.png
@@ -237,6 +282,8 @@ It is not a big deal for a small program, but quickly becomes a daunting task as
 
 For more details see section :ref:`murano_vs_heat_extensive_example_label`
 
+
+.. _what_is_inside_package_label:
 
 What is inside Murano package
 -----------------------------
@@ -286,7 +333,8 @@ The structure of a Murano package is::
 
 This folder structure must be packaged into zip archive ``<MyApplication>.zip``
 
-We will get into more details of what is inside ``*.yaml`` and ``*.template`` files in the next chapter: :ref:`simple_vm_application_label`.
+We will get into more details of what is inside ``*.yaml`` and ``*.template`` files 
+in the next chapter: :ref:`simple_vm_application_label`.
 
 
 Further Reading
