@@ -7,7 +7,16 @@ Introduction
 
 .. raw:: html
 
-    <style> p {max-width:750px; width:100%; font-size:18px; color:rgb(0,50,100); text-align:left;}  </style>
+    <style> p {max-width:750px; width:100%; font-size:18px; color:rgb(0,50,100); text-align:left;}  
+            strong {font-size:18px;}
+            li {font-size:18px;}
+            div {max-width:750px; width:100%;}
+            h1 {font-size:26px; color: black; padding-top: 125px; padding-bottom: 125px;}
+            h2 {font-size:24px; color: black; padding-top: 125px; padding-bottom: 125px;}
+            h3 {font-size:22px; color: black; padding-top: 125px; padding-bottom: 125px;}
+            
+    
+    </style>
 
 Murano is an application catalog project on OpenStack. This project is completely open source and managed
 according OpenStack community rules.
@@ -146,6 +155,11 @@ it sends the status update messages to murano dashboard.
 
 Now we have QA Tomcat and QA Postgres machines created.
 
+Murano logs provide a good account of whathappens during deployment:
+
+.. image:: images/qa_env_deployment_logs.png
+
+
 To create UAT infactructure, we need to repeat the steps for ``env-petstore-uat``:
 add Tomcat and Postgres applications to it and deploy the ``env-petstore-uat`` environment.
 
@@ -237,15 +251,6 @@ The Stacks panel will give you a complete report of all the entities created in 
 .. image:: images/stacks.png
 
  
- 
-| on Murano topology page
-
-.. image:: images/qa_env_after_deployed.png
-.. image:: images/qa_env_deployments_history.png
-.. image:: images/qa_env_deployment_logs.png
-
-
-
 
 
 Murano vs. Heat
@@ -309,39 +314,59 @@ The structure of a Murano package is::
    
    
 **manifest.yaml**
-  is an entry point to the package. It is in yaml format and contains the general information
-  about the appplication such as name, author and description
+  This file is an entry point to the package. 
+  It contains the general information about the appplication such as name, author and description.
+  This file is in yaml format. 
+  
+  Actually, almost all Murano application files are based on yaml format.
+  The yaml itself is beyond this tutorial, you may read about yaml in wikipedia http://en.wikipedia.org/wiki/YAML, 
+  and on official yaml site http://yaml.org/
 
 **Classes** 
-  folder contains Murano templates written in *MuranoPL* language. They
-  define properties and methods of application components.
-
-  Class methods contain references to the application plans, which control installation process on a virtual machine.
+  This folder contains Murano templates written in *MuranoPL* language.  
+  They define properties and methods of application components.
+  MuranoPL language is based on yaml format too.
+  Class methods contain references to the application plans in Resources folder (see below), which control installation process on a virtual machine.
 
 **Resources**
-  folder contains these application plans.
+  This folder contains the application plans.
+  Very simply put, application plan is a wrapper around sh script.
+  You pass control to this wrapper when you need to execute *.sh script.
+  Application plans are written in a specific format based on yaml.
+.. todo:: refine terminology: application plan?
 
 **Resources/scripts**
-  folder contain  executable scenarios that are used by execution plans.
+  This folder contains executable scenarios that are used by application plans.
+  Usually the are any executable files that can be run on the operating system you have chosen for your instances.
+  For example, unix .sh scripts.
 
 **UI**
-  folder contain a description of the UI form for your application. UI form will be rendered into html popup window, 
-  where you will be abple to pass parameters for your application.
+  This folder contain a description of the UI form for your application. 
+  The description of UI forms  are written in a special format, based on yaml.
+  UI form will be rendered into html popup window, 
+  where you will be able to pass parameters for your application.
 
 **logo.png**
-  in a logo of your application.  It is displayed on Murano dashboard. The file is recommended, but not required.
+  It is a logo of your application.
+  It is displayed on Murano dashboard. The file is recommended, but not required.
+  Please note, that only png format is supported.
+
 
 This folder structure must be packaged into zip archive ``<MyApplication>.zip``
 
 We will get into more details of what is inside ``*.yaml`` and ``*.template`` files 
 in the next chapter: :ref:`simple_vm_application_label`.
 
+Discening reader may inquire, where to put binaries. Georgiy Okrokvertskhov explains this in his blog article:  
+http://muranohints.blogspot.com/2015/03/murano-sending-files-to-vm.html
+
 
 Further Reading
 ---------------
 
-.. todo:: give links to the next chapters
-
-
+Yaml in wikipedia: http://en.wikipedia.org/wiki/YAML
+Yaml official site: http://yaml.org/
+Source code explained:  :ref:`simple_vm_application_label`
+Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/
 
  
