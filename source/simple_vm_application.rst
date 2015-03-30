@@ -1,17 +1,23 @@
 .. _simple_vm_application_label:
 
-Simple VM Application
----------------------
+Demo Application: Simple VM
+---------------------------
 
-What is inside SimpleVM
-~~~~~~~~~~~~~~~~~~~~~~~
+What is Simple VM?
+~~~~~~~~~~~~~~~~~~
 
 .. todo:: create the section
    
 https://github.com/gokrokvertskhov/murano-trainings/tree/master/Day_1/io.murano.apps.test.SimpleVM
 
+How to Upload and Deploy Simple VM?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simple VM Code Explained
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 manifest.yaml
-~~~~~~~~~~~~~
+_____________
 
 **manifest.yaml**::
 
@@ -116,7 +122,7 @@ See more details in the section:  :ref:`simple_vm_yaml_label`
 .. _simple_vm_yaml_label:
 
 Classes/SimpleVM.yaml
-~~~~~~~~~~~~~~~~~~~~~
+_____________________
 
 **Classes/SimpleVM.yaml**::
 

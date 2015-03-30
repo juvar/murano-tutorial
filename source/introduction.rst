@@ -1,8 +1,8 @@
-Murano Overview
-===============
+Introduction to Murano
+======================
  
-Introduction
-------------
+What is Murano?
+---------------
 .. todo:: Move css that fixes text width into css stylesheet
 
 .. raw:: html
@@ -215,10 +215,10 @@ Technically this is done by addind/removing special metadata to an image.
 .. _non_murano_ui_label:
 
 Non-Murano UI related to Murano
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instances
-~~~~~~~~~
+_________
 
 After your environment is deployed, you may use regular Horizon UI so that to verify what instances were created.
 
@@ -234,7 +234,7 @@ When both QA and UAT environments are deployed, you will see 2 more instances:
 
 
 Network Topology
-~~~~~~~~~~~~~~~~
+________________
 
 The other interesting panel is Network Topology (Project -> Network -> Network Topology). 
 After both QA and UAT environments are deployed, you will see network topology which is similar to this:
@@ -244,7 +244,7 @@ After both QA and UAT environments are deployed, you will see network topology w
 Note that QA and UAT machines share different subnets.
 
 Stacks
-~~~~~~
+______
 
 The Stacks panel will give you a complete report of all the entities created in OS when you deployedyour environment.
 
@@ -290,8 +290,8 @@ For more details see section :ref:`murano_vs_heat_extensive_example_label`
 
 .. _what_is_inside_package_label:
 
-What is inside Murano package
------------------------------
+What is inside Murano package?
+------------------------------
 
 The structure of a Murano package is::
 
@@ -361,12 +361,13 @@ Discening reader may inquire, where to put binaries. Georgiy Okrokvertskhov expl
 http://muranohints.blogspot.com/2015/03/murano-sending-files-to-vm.html
 
 
-Further Reading
----------------
+What to read next?
+------------------
 
 Yaml in wikipedia: http://en.wikipedia.org/wiki/YAML
 Yaml official site: http://yaml.org/
 Source code explained:  :ref:`simple_vm_application_label`
-Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/
+Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/, 
+an authoritative source of wisdom.
 
  
