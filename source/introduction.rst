@@ -4,6 +4,7 @@ Introduction to Murano
 What is Murano?
 ---------------
 .. todo:: Move css that fixes text width into css stylesheet
+.. todo:: Make fonts bigger
 
 .. raw:: html
 
@@ -14,11 +15,10 @@ What is Murano?
             h1 {font-size:26px; color: black; padding-top: 125px; padding-bottom: 125px;}
             h2 {font-size:24px; color: black; padding-top: 125px; padding-bottom: 125px;}
             h3 {font-size:22px; color: black; padding-top: 125px; padding-bottom: 125px;}
-            
-    
+                
     </style>
 
-Murano is an application catalog project on OpenStack. This project is completely open source and managed
+Murano is an application catalog project on OpenStack. This project is open source and managed
 according OpenStack community rules.
 
 .. note:: **Murano mission statement from OpenStack wiki**
@@ -28,9 +28,22 @@ according OpenStack community rules.
    Cloud users can then use the catalog to compose reliable application environments with the push of a button.
 
 
-The key goal is to provide UI and API which allows to compose and deploy composite environments on the Application
-abstraction level and then manage their lifecycle. Murano is focused on user experience and provides an easy way to
+Murano provides UI and API which allows to compose and deploy composite environments on the Application
+abstraction level and then manage their lifecycles. 
+Murano is focused on user experience and provides an easy way to
 browse application catalog, find and filter applications in it by browsing via categories or by using free text search.
+
+Murano UI is called **Murano Dashboard**. It is pluggable into Horizon (standard Open Stack UI).
+Murano API consists of:
+* JSON-based Murano API, that duplicates the functionality of Murano Dashboard
+* Command-line interface for Murano. It is a wrapper around Murano JSON API
+* MuranoPL - a yaml-based programming language to create Murano Application.
+
+Application, Environment and Package are the key Murano notions. 
+Murano Dashboard offers panels to manage Applications, Environments and Packages.  
+This tutorial will define and explain these key notions while walking through the Murano Dashboard.
+
+.. todo:: add note on terminology: application as software vs Murano Application, VM instacse vs object instance vs...
 
 Murano UI Overview
 ------------------
@@ -38,12 +51,19 @@ Murano UI Overview
 Applications
 ~~~~~~~~~~~~
 
-The main Murano UI page is an Application Catalog page where users can browse applications available for the tenant.
-**Murano application** is a set of application binaries, scripts, workflows and UI definitions to install and manage an
-arbitrary software like Tomcat, MySQL, Windows ActiveDirectory  on top of VM or on a bare metal server. Workflows
-usually contain a set of instructions to provision OpenStack resources: VMs, networks, subnets, floating IPs and volumes.
+The main Murano UI page is an Application page (Murano -> Application Catalog -> Applications), 
+where users can browse applications available for the tenant.
+
+**Murano application** installs and manages an arbitrary software like Tomcat, MySQL, Windows ActiveDirectory  
+on top of VM or on a bare metal server. It consists of:
+* software binary distributives
+* shell scripts
+* Murano application code written on MuranoPL (workflows and UI definitions). 
+
+**Workflows** usually contain a set of instructions to provision OpenStack resources: VMs, networks, subnets, floating IPs and volumes.
 As soon as infrastructure resources are provisioned Murano workflows will orchestrate software components installation.
-It is important to note that Heat is used for OpenStack resource provisioned and it also can be used for software
+
+It is important to note that Murano uses Heat to provision OpenStack resources and also can use Heat for software
 components installation via Heat Software orchestration.
 
 .. image:: images/applications.png
@@ -76,9 +96,9 @@ Environments
 ~~~~~~~~~~~~
 
 **Environment** is a set of applications managed by a single tenant. 
-Appplications within single environmanet may comprise complex configuration, 
+Appplications within single environment may comprise complex configuration, 
 while applications in different environmetns are always independent from each other.
-Environment is a logical agregation of multiple applications that binds them together.
+Environment is a logical aggregation of multiple applications that binds them together.
 
 
 The best way to understand what environment is, is it to look at the example. 
@@ -99,7 +119,7 @@ UAT team needs separate from QA, independent infrastructure, that also consists 
 While QA Tomcat interacts with QA PostgreSQL, QA servers are unaware of UAT servers, and vice versa.
 QA and UAT infrastructures are completely independent from each other.
 
-In the situation like that we will create two Murano environments: one for QA, the other one for UAT.
+We will create two Murano environments: one for QA, the other one for UAT so that to satisfy these requirements.
 
 Environments panel has a "Create environment" button, that creates environments. 
 
@@ -110,7 +130,7 @@ Environments panel has a "Create environment" button, that creates environments.
 
 At this stage these environments are mere configuration within Murano.
 
-You may click on the name the environment to view what applications it consists of. 
+You may click on a name of an environment to view what applications it consists of. 
 Newly created environment is empty. It has nothing except for its name. 
 
 
@@ -118,8 +138,8 @@ Newly created environment is empty. It has nothing except for its name.
 
 Once the environment is created, we can add both Tomcat and PostgreSQL applications to it.
 Click on the "Add Component" button, and select Tomcat application, and enter parameters for Tomcat application.
-These parameters vary from application to applcation. Most of the applications ask name, instance flavor, 
-instance image, etc. Database will probably ask you to set the username and password.  
+These parameters vary from application to application. Most of the applications ask name, instance flavor, 
+instance image, etc. Database application will probably ask you to set the username and password.  
 
 .. image:: images/add_tomcat_1.png
 
@@ -130,7 +150,7 @@ The image we use for the example is *"Ubuntu 14.04 LTS x64 (pre installed murano
 
 .. image:: images/add_tomcat_2.png
 
-Once Tomcat and PostgresQL applications are added to the env-petstore-qa, the state of its components is ``"Configuring"``:
+When Tomcat and PostgresQL applications are just added to the env-petstore-qa their state is ``"Configuring"``:
 
 .. image:: images/qa_env_pre_deploy.png
  
@@ -148,14 +168,14 @@ All applications are being deployed in parallel.
 .. image:: images/qa_env_pre_deploy_2.png
 
 The deployment operation takes some time and while it is in progress, 
-it sends the status update messages to murano dashboard.
+it sends the status update messages to Murano dashboard.
 
 .. image:: images/qa_env_pre_deploy_complete.png
 
 
 Now we have QA Tomcat and QA Postgres machines created.
 
-Murano logs provide a good account of whathappens during deployment:
+Murano logs provide a complete account of what happens during deployment:
 
 .. image:: images/qa_env_deployment_logs.png
 
@@ -181,12 +201,15 @@ This is the interface for application publisher and catalog administrator.
 
 Package definition panel has a button "Upload Package"
 You can create your own Murano application, package it as zip archive upload to Murano.
-Once uploaded,  your application is immediately availale in the application catalog. 
+As soon as an application is uploaded, it is available in the Application Catalog.
 
-This interface allows you to download any package as well. 
-This is a very useful if you are starting to develop your own application, because 
-you may look how every application is done and create your own application based on the complex application 
-that is already present in the catalog.
+The Package Definitions tab allows you to download any package as well. 
+This is especially useful if you are beginner Murano developer, 
+because you may analyse the source code of every application and create your own application 
+based on the complex application that is already present in the catalog. 
+
+See the full list of useful (and reusable) Murano application here:
+.. todo:: Add label
 
 For more information about packages, read :ref:`what_is_inside_package_label`
 
@@ -263,8 +286,8 @@ When should I prefer Murano over Heat?
 
 Firstly, if you have little experience with Openstack, you may profit from the fact that 
 you do not have to know which particular Heat template do you need.
-Murano offers application search, which includes search by category (aka tag).
-These are: Web, Databases, Application Servers, Big Data, Load Balances, etc. just to name a few.
+Murano offers application search, which includes search by category, tag and full-test search.
+The sample values of Categories and Tags: Web, Databases, Application Servers, Big Data, Load Balances, etc.
 Each application is a tested piece logic that not only installs required software component, but also performs all the 
 implied instance configuration (such as to ensure that you will be to access HTTP port 8080 if you provisioned Tomcat instance)
 All these security configurations are transparent to you.
