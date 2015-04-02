@@ -4,7 +4,6 @@ Introduction to Murano
 What is Murano?
 ---------------
 .. todo:: Move css that fixes text width into css stylesheet
-.. todo:: Make fonts bigger
 
 .. raw:: html
 
@@ -35,15 +34,14 @@ browse application catalog, find and filter applications in it by browsing via c
 
 Murano UI is called **Murano Dashboard**. It is pluggable into Horizon (standard Open Stack UI).
 Murano API consists of:
+
 * JSON-based Murano API, that duplicates the functionality of Murano Dashboard
 * Command-line interface for Murano. It is a wrapper around Murano JSON API
 * MuranoPL - a yaml-based programming language to create Murano Application.
 
 Application, Environment and Package are the key Murano notions. 
 Murano Dashboard offers panels to manage Applications, Environments and Packages.  
-This tutorial will define and explain these key notions while walking through the Murano Dashboard.
-
-.. todo:: add note on terminology: application as software vs Murano Application, VM instacse vs object instance vs...
+This tutorial will define and explain what are Application, Environment and Package while walking through the Murano Dashboard.
 
 Murano UI Overview
 ------------------
@@ -56,6 +54,7 @@ where users can browse applications available for the tenant.
 
 **Murano application** installs and manages an arbitrary software like Tomcat, MySQL, Windows ActiveDirectory  
 on top of VM or on a bare metal server. It consists of:
+
 * software binary distributives
 * shell scripts
 * Murano application code written on MuranoPL (workflows and UI definitions). 
@@ -69,7 +68,7 @@ components installation via Heat Software orchestration.
 .. image:: images/applications.png
 
 Each application tile has an icon, a name, short description and detailed information. There are also two buttons on each 
-application tile which defines actions which you can immedeately do with the application. 
+application tile which defines actions which you can do with the application. 
 Details link leads to the detailed application description page where users can find more information about the application.
 
 Let's take a look at the Details page of ``Tomcat`` application:
@@ -80,14 +79,13 @@ This application is responsible for creating a new instance, configuring its sec
 The most interesting parts of it are ``Categories: Web`` and ``Tags: Servlets, Server, Pages, Java``
 
 Both application Categories and Tags are a markers, which you can search an application by.
-The difference between them is that Tags are set by Application developer, 
-while Categories are managed by Murano Administrator.
-
 For example if you need a database, you may search the Application catalog by the category 'Database'.
 The search may return such applications as MySQL, PostgreSQL, etc.
 
+The difference between Tags and Categories is that Tags are set by Application developer, 
+while Categories are managed by Murano Administrator.
 
-The full list of Categories is:
+The screenshot below displays sample list of Categories:
 
 .. image:: images/qa_env_categories.png
 
@@ -137,7 +135,7 @@ Newly created environment is empty. It has nothing except for its name.
 .. image:: images/qa_env_empty.png
 
 Once the environment is created, we can add both Tomcat and PostgreSQL applications to it.
-Click on the "Add Component" button, and select Tomcat application, and enter parameters for Tomcat application.
+Click on the "Add Component" button, select Tomcat application, and enter parameters for Tomcat application.
 These parameters vary from application to application. Most of the applications ask name, instance flavor, 
 instance image, etc. Database application will probably ask you to set the username and password.  
 
@@ -169,6 +167,7 @@ All applications are being deployed in parallel.
 
 The deployment operation takes some time and while it is in progress, 
 it sends the status update messages to Murano dashboard.
+Murano Dashboard displays the in the "Last Operation" column.
 
 .. image:: images/qa_env_pre_deploy_complete.png
 
@@ -191,7 +190,7 @@ Packages
 ~~~~~~~~
 
 Every Murano application has a source code and resources (such as bash scripts, software binary distributives, etc.)
-If the source code and the resources are organized into specific folder structure and packaged as zip archive
+When the source code and other application resources are organized into specific folder structure and packaged as zip archive
 this zip archive is called **Murano Package**.  
 
 Murano Dashboard offers Package Definitions tab, that allows to manage Murano Packages. 
@@ -208,8 +207,8 @@ This is especially useful if you are beginner Murano developer,
 because you may analyse the source code of every application and create your own application 
 based on the complex application that is already present in the catalog. 
 
-See the full list of useful (and reusable) Murano application here:
-.. todo:: Add label
+Some useful (and reusable) Murano application can be found in github:
+https://github.com/stackforge/murano-apps
 
 For more information about packages, read :ref:`what_is_inside_package_label`
 
@@ -222,15 +221,13 @@ Images
 Every instance (aka virtual machine) that is created by Murano Application, must me Murano-aware.
 It must have a special Murano component called Murano agent installed on it.
 
-.. todo:: verify That's why Murano provides build-in Operationg System images that have pre-installed murano agent. 
-
 If a Murano application offers you to select an image, it is obligatory to select an image that has murano agent.
 
 Images panel displays all the Murano-enabled images:
 
 .. image:: images/images.png
 
-All the image-related activities on Murano-enables images should be performed via Glance interface 
+All the image-related activities on Murano-enabled images should be performed via Glance interface 
 exaclty the same way as it is performmed on all other images. 
 The only functionality offred by Image panel is to mark/ unmark an image as Murano image.
 Technically this is done by addind/removing special metadata to an image. 
@@ -341,36 +338,41 @@ The structure of a Murano package is::
   It contains the general information about the appplication such as name, author and description.
   This file is in yaml format. 
   
-  Actually, almost all Murano application files are based on yaml format.
+  Almost all Murano application files are based on yaml format.
   The yaml itself is beyond this tutorial, you may read about yaml in wikipedia http://en.wikipedia.org/wiki/YAML, 
   and on official yaml site http://yaml.org/
 
 **Classes** 
   This folder contains Murano templates written in *MuranoPL* language.  
+  
   They define properties and methods of application components.
   MuranoPL language is based on yaml format too.
   Class methods contain references to the application plans in Resources folder (see below), which control installation process on a virtual machine.
 
 **Resources**
   This folder contains the application plans.
+  
   Very simply put, application plan is a wrapper around sh script.
   You pass control to this wrapper when you need to execute *.sh script.
   Application plans are written in a specific format based on yaml.
-.. todo:: refine terminology: application plan?
+.. todo:: refine terminology: application plan or execution plan?
 
 **Resources/scripts**
   This folder contains executable scenarios that are used by application plans.
+  
   Usually the are any executable files that can be run on the operating system you have chosen for your instances.
   For example, unix .sh scripts.
 
 **UI**
   This folder contain a description of the UI form for your application. 
+  
   The description of UI forms  are written in a special format, based on yaml.
   UI form will be rendered into html popup window, 
   where you will be able to pass parameters for your application.
 
 **logo.png**
   It is a logo of your application.
+  
   It is displayed on Murano dashboard. The file is recommended, but not required.
   Please note, that only png format is supported.
 
@@ -387,10 +389,17 @@ http://muranohints.blogspot.com/2015/03/murano-sending-files-to-vm.html
 What to read next?
 ------------------
 
-Yaml in wikipedia: http://en.wikipedia.org/wiki/YAML
-Yaml official site: http://yaml.org/
-Source code explained:  :ref:`simple_vm_application_label`
-Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/, 
-an authoritative source of wisdom.
+* Yaml in wikipedia: http://en.wikipedia.org/wiki/YAML
+* Yaml official site: http://yaml.org/
+* Demo application and its source code explained:  :ref:`simple_vm_application_label`
+
+General Murano docs
+
+* The main site of Murano documentation: http://murano.readthedocs.org/en/latest/
+* Openstack wiki for Murano: https://wiki.openstack.org/wiki/Murano
+* Murano applications in github: https://github.com/stackforge/murano-apps
+* Openstack wiki for Heat https://wiki.openstack.org/wiki/Heat
+* Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/
+
 
  
