@@ -10,7 +10,8 @@ Welcome to MuranoTutorial's Documentation
    introduction
    simple_vm_application
    real_life_murano_application
-   reference_murano_applications   
+   reference_murano_applications
+   building_murano_images   
    troubleshooting
    murano_vs_heat
    murano_tools
