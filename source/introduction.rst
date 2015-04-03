@@ -37,7 +37,7 @@ Murano API consists of:
 
 * JSON-based Murano API, that duplicates the functionality of Murano Dashboard
 * Command-line interface for Murano. It is a wrapper around Murano JSON API
-* MuranoPL - a yaml-based programming language to create Murano Application.
+* MuranoPL - a yaml-based DSL (Domaim Specific Language) that describes workflow that orchestrates creation and configuration of various components and resources.
 
 Application, Environment and Package are the key Murano notions. 
 Murano Dashboard offers panels to manage Applications, Environments and Packages.  
@@ -141,7 +141,7 @@ instance image, etc. Database application will probably ask you to set the usern
 
 .. image:: images/add_tomcat_1.png
 
-.. warning:: Always select instance image that comes with pre-installed murano agent. Read more on this here: :ref:`images_label` 
+.. warning:: Always assume that you need an instance image that comes with pre-installed murano agent, unless you deploy non-standard application that requires specific image. Read more on this here: :ref:`images_label` 
 
 Usually the name of the image itself implies that it is Murano-ready, as it is shown in the screenshot below.
 The image we use for the example is *"Ubuntu 14.04 LTS x64 (pre installed murano agent)"*
@@ -218,19 +218,34 @@ For more information about packages, read :ref:`what_is_inside_package_label`
 Images
 ~~~~~~
 
-Every instance (aka virtual machine) that is created by Murano Application, must me Murano-aware.
-It must have a special Murano component called Murano agent installed on it.
+As Murano orchestrates creation and configuration of an instance, 
+Murano needs to interact with it. 
 
-If a Murano application offers you to select an image, it is obligatory to select an image that has murano agent.
+There are several ways to achieve this. 
+The most popular is  **murano-agent** - software component that resides on an instance and 
+listens to Murano RabbitMQ queue. 
+The other less popular ways to interact with an instance are Heat agents 
+(if an application relies on Heat software orchestration), 
+or an arbitrary bootstrap script, injected to an instance. 
 
-Images panel displays all the Murano-enabled images:
+The most common way to ensure that an instance has murano-agent is to pre-install
+murano-agent on an image of a virtual machine.
+That's why if a Murano application offers you to select an image and you do not know the implementation details, 
+always assume that you need an image with pre-installed murano agent.
+
+Images panel displays all the images related to Murano:
 
 .. image:: images/images.png
 
 All the image-related activities on Murano-enabled images should be performed via Glance interface 
-exaclty the same way as it is performmed on all other images. 
-The only functionality offred by Image panel is to mark/ unmark an image as Murano image.
+exaclty the same way as it is performmed on all other images.
+ 
+The only functionality offred by Image panel is to mark/ unmark an image as Murano image, and 
+to tag a Murano image as a ``linux`` or ``windows``.
 Technically this is done by addind/removing special metadata to an image. 
+
+Future releases of Murano will offer more fine-grain tags 
+so that to distinguish between different linux and windows operating families.
 
 .. _non_murano_ui_label:
 
@@ -350,12 +365,11 @@ The structure of a Murano package is::
   Class methods contain references to the application plans in Resources folder (see below), which control installation process on a virtual machine.
 
 **Resources**
-  This folder contains the application plans.
+  This folder contains the execution plans.
   
-  Very simply put, application plan is a wrapper around sh script.
+  Very simply put, **execution plan** is a wrapper around sh script.
   You pass control to this wrapper when you need to execute *.sh script.
-  Application plans are written in a specific format based on yaml.
-.. todo:: refine terminology: application plan or execution plan?
+  Execution plans are written in a specific format based on yaml.
 
 **Resources/scripts**
   This folder contains executable scenarios that are used by application plans.
@@ -399,6 +413,7 @@ General Murano docs
 * Openstack wiki for Murano: https://wiki.openstack.org/wiki/Murano
 * Murano applications in github: https://github.com/stackforge/murano-apps
 * Openstack wiki for Heat https://wiki.openstack.org/wiki/Heat
+* Murano Integration with Heat Orchestration Templates: https://www.youtube.com/watch?v=oRD3ihwa9u4 
 * Georgiy Okrokvertskhov's blog for advanced Murano tips and tricks: http://muranohints.blogspot.com/
 
 
