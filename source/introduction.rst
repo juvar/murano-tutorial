@@ -3,7 +3,6 @@ Introduction to Murano
  
 What is Murano?
 ---------------
-.. todo:: Move css that fixes text width into css stylesheet
 
 .. raw:: html
 
@@ -37,7 +36,9 @@ Murano API consists of:
 
 * JSON-based Murano API, that duplicates the functionality of Murano Dashboard
 * Command-line interface for Murano. It is a wrapper around Murano JSON API
-* MuranoPL - a yaml-based DSL (Domaim Specific Language) that describes workflow that orchestrates creation and configuration of various components and resources.
+* MuranoPL - a YAML-based DSL (Domain Specific Language) that describes workflow that orchestrates creation and configuration of various components and resources.  MuranoPL is executed by central Murano component ``murano-engine``.
+ 
+The big yet simplified picture that renders Murano components and basic interactions between them can be found here: https://software.mirantis.com/wp-content/uploads/2013/10/Murano-Block-Diagram.gif
 
 Application, Environment and Package are the key Murano notions. 
 Murano Dashboard offers panels to manage Applications, Environments and Packages.  
@@ -53,17 +54,20 @@ The main Murano UI page is an Application page (Murano -> Application Catalog ->
 where users can browse applications available for the tenant.
 
 **Murano application** installs and manages an arbitrary software like Tomcat, MySQL, Windows ActiveDirectory  
-on top of VM or on a bare metal server. It consists of:
+on top of virtual machine instance. It consists of:
 
-* software binary distributives
-* shell scripts
-* Murano application code written on MuranoPL (workflows and UI definitions). 
+* Arbitrary software resources such as shell scripts, various config or properties files or even software binary distributives 
+* Murano application code written on MuranoPL (workflows)
+* Text files in special Murano format that specify UI definitions, Murano application manifest.
+* Application logo 
 
 **Workflows** usually contain a set of instructions to provision OpenStack resources: VMs, networks, subnets, floating IPs and volumes.
 As soon as infrastructure resources are provisioned Murano workflows will orchestrate software components installation.
 
-It is important to note that Murano uses Heat to provision OpenStack resources and also can use Heat for software
-components installation via Heat Software orchestration.
+It is important to note that Murano uses Heat to provision OpenStack resources. 
+
+Murano can also use Heat for software components installation via Heat Software orchestration. 
+If used together with Heat Software Orchestration, Murano can install software not only on VM instance, but also on a bare metal server. 
 
 .. image:: images/applications.png
 
@@ -194,20 +198,20 @@ When the source code and other application resources are organized into specific
 this zip archive is called **Murano Package**.  
 
 Murano Dashboard offers Package Definitions tab, that allows to manage Murano Packages. 
-This is the interface for application publisher and catalog administrator.
+This is the interface for Application Publisher and Catalog Administrator.
 
 .. image:: images/packages.png
 
 Package definition panel has a button "Upload Package"
-You can create your own Murano application, package it as zip archive upload to Murano.
+You can create your own Murano application, package it as zip archive and upload to Murano.
 As soon as an application is uploaded, it is available in the Application Catalog.
 
 The Package Definitions tab allows you to download any package as well. 
 This is especially useful if you are beginner Murano developer, 
 because you may analyse the source code of every application and create your own application 
-based on the complex application that is already present in the catalog. 
+based on the complex one already present in the catalog. 
 
-Some useful (and reusable) Murano application can be found in github:
+Some useful (and reusable) Murano application can be found on github site:
 https://github.com/stackforge/murano-apps
 
 For more information about packages, read :ref:`what_is_inside_package_label`
@@ -281,7 +285,8 @@ Note that QA and UAT machines share different subnets.
 Stacks
 ______
 
-The Stacks panel will give you a complete report of all the entities created in OS when you deployedyour environment.
+As Murano uses Heat to provision OpenStack resources, you may review Heat UI to get the idea of what OpenStack entities were created when you deployed your environment.
+It is the Stacks panel (Project -> Orchestration -> Stacks)
 
 .. image:: images/stacks.png
 
@@ -304,7 +309,11 @@ Each application is a tested piece logic that not only installs required softwar
 implied instance configuration (such as to ensure that you will be to access HTTP port 8080 if you provisioned Tomcat instance)
 All these security configurations are transparent to you.
 
-Secondly, Murano provides actions.
+Secondly, Murano Applications are portable accross different clouds, while Heat templates are designed for specific cloud. 
+Heat template may reference OpenStack resources by their IDs, which requires template modification for every particular site.
+Murano is a higher-level language, than Heat. It does a lot of automation and makes low-level details transparent to an application developer.   
+
+Thirdly, Murano provides actions.
 They allow you to modify deployment configuration after application is deployed.
 Read more on actions here: http://openstack.10931.n7.nabble.com/Glance-Heat-Murano-split-dsicussion-td49855.html
 and here: https://www.mirantis.com/blog/seeing-murano-actions-action/                                                                                                                                      
@@ -320,7 +329,7 @@ The weak point of a declarative program is a dependency management. You cannot j
 You need to specify that you install rpm only after the instance is created. I.e. that rpm installation "depends on" instance creation.
 It is not a big deal for a small program, but quickly becomes a daunting task as you program increases in size. 
 
-For more details see section :ref:`murano_vs_heat_extensive_example_label`
+For more details see section :ref:`murano_vs_heat_extensive_example_label` (To be done)
 
 
 .. _what_is_inside_package_label:
@@ -351,28 +360,30 @@ The structure of a Murano package is::
 **manifest.yaml**
   This file is an entry point to the package. 
   It contains the general information about the appplication such as name, author and description.
-  This file is in yaml format. 
+  This file is in YAML format. 
   
-  Almost all Murano application files are based on yaml format.
-  The yaml itself is beyond this tutorial, you may read about yaml in wikipedia http://en.wikipedia.org/wiki/YAML, 
-  and on official yaml site http://yaml.org/
+  Almost all Murano application files are based on YAML format.
+  The YAML itself is beyond this tutorial, you may read about YAML in wikipedia http://en.wikipedia.org/wiki/YAML, 
+  and on official YAML site http://yaml.org/
 
 **Classes** 
   This folder contains Murano templates written in *MuranoPL* language.  
   
   They define properties and methods of application components.
-  MuranoPL language is based on yaml format too.
+  MuranoPL language is based on YAML format too.
   Class methods contain references to the application plans in Resources folder (see below), which control installation process on a virtual machine.
 
 **Resources**
-  This folder contains the execution plans.
+  This folder contains the execution plans and any arbitrary files.
   
   Very simply put, **execution plan** is a wrapper around sh script.
   You pass control to this wrapper when you need to execute *.sh script.
-  Execution plans are written in a specific format based on yaml.
+  Execution plans are written in a specific format based on YAML.
+  
+  Besides execution plans, this folder may contain any application resources such as config, properties, localization files. It may even contain heat templates.
 
 **Resources/scripts**
-  This folder contains executable scenarios that are used by application plans.
+  This folder contains executable scenarios that are used by execution plans.
   
   Usually the are any executable files that can be run on the operating system you have chosen for your instances.
   For example, unix .sh scripts.
@@ -380,7 +391,7 @@ The structure of a Murano package is::
 **UI**
   This folder contain a description of the UI form for your application. 
   
-  The description of UI forms  are written in a special format, based on yaml.
+  The description of UI forms  are written in a special format, based on YAML.
   UI form will be rendered into html popup window, 
   where you will be able to pass parameters for your application.
 
@@ -393,7 +404,7 @@ The structure of a Murano package is::
 
 This folder structure must be packaged into zip archive ``<MyApplication>.zip``
 
-We will get into more details of what is inside ``*.yaml`` and ``*.template`` files 
+This tutorial gets into more details of what is inside ``*.yaml`` and ``*.template`` files 
 in the next chapter: :ref:`simple_vm_application_label`.
 
 Discening reader may inquire, where to put binaries. Georgiy Okrokvertskhov explains this in his blog article:  
@@ -403,8 +414,8 @@ http://muranohints.blogspot.com/2015/03/murano-sending-files-to-vm.html
 What to read next?
 ------------------
 
-* Yaml in wikipedia: http://en.wikipedia.org/wiki/YAML
-* Yaml official site: http://yaml.org/
+* YAML in wikipedia: http://en.wikipedia.org/wiki/YAML
+* YAML official site: http://yaml.org/
 * Demo application and its source code explained:  :ref:`simple_vm_application_label`
 
 General Murano docs
