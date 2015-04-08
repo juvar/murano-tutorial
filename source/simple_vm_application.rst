@@ -4,16 +4,18 @@ Demo Application: Simple VM
 ---------------------------
 
 .. todo:: Move css that fixes text width into css stylesheet
+.. todo:: Create a new style for sample code, other than the code of SimpleVM
 
 .. raw:: html
 
-    <style> p {max-width:750px; width:100%; font-size:18px; color:rgb(0,50,100); text-align:left;}  
+    <style> p {max-width:800px; width:100%; font-size:18px; color:rgb(0,50,100); text-align:left;}  
             strong {font-size:18px;}
             li {font-size:18px;}
-            div {max-width:750px; width:100%;}
+            div {max-width:800px; width:100%;}
             h1 {font-size:26px; color: black; padding-top: 125px; padding-bottom: 125px;}
             h2 {font-size:24px; color: black; padding-top: 125px; padding-bottom: 125px;}
             h3 {font-size:22px; color: black; padding-top: 125px; padding-bottom: 125px;}
+            pre.sample {background-color:lightgrey; width:50%}
                 
     </style>
 
@@ -56,10 +58,9 @@ The package structure of Simple VM is::
    |_  logo.png
    
    
-The structure of the typical Murano Application is described here:
-.. todo:: add link
+The structure of the typical Murano Application is described here: :ref:`what_is_inside_package_label`
 
-The interesting part of Simple VM is that it does not install any software on the instance it creates.
+The unusual part of Simple VM is that it does not install any software on the instance it creates.
 That's why there is no any .sh script that would install software and consequently there is no template for install script in Resouces folder.
 On the other hand, Simple VM provides a restart action, which is available at Murano Dashboard.
 The logic of Restart action is placed in Restart.template and restart.sh.  
@@ -67,7 +68,11 @@ The logic of Restart action is placed in Restart.template and restart.sh.
 manifest.yaml
 _____________
 
-**manifest.yaml**::
+**manifest.yaml**
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
 
    Format: 1.0
    Type: Application
@@ -85,18 +90,23 @@ https://github.com/gokrokvertskhov/murano-trainings/blob/master/Day_1/io.murano.
 
 This is a manifest file. It contains general information about the application.
 It is very similar to the manifest of a jar archive.
-It has a fixed format based on yaml (this is not MuranoPL).
+It has a fixed format based on YAML (this is not MuranoPL).
 
 Let's inspect manifest.yaml line-by-line:
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
 
    Format: 1.0
 
 Specifies the version of the format for manifest.yaml. Currently 1.0 is the only available version.
 
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 2   
+
 
    Type: Application
    
@@ -110,7 +120,10 @@ You can see Core Library on the Packages Panel:
 
 Note, that both values: ``Application`` and ``Library`` start with capital letter. This is the naming convention for all pre-defined values in Murano code.
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 3   
+
  
    FullName: io.murano.apps.test.SimpleVM
    
@@ -120,20 +133,46 @@ The "io.murano.apps.test." is a "package" part of the name.
 "SimpleVM" is a "class" part of the name.
 
 
-.. note:: **Java Language Specification states**: You form a unique package name by first having (or belonging to an organization that has) an Internet domain name, such as oracle.com. You then reverse this name, component by component, to obtain, in this example, com.oracle, and use this as a prefix for your package names, using a convention developed within your organization to further administer package names. Such a convention might specify that certain package name components be division, department, project, machine, or login names. The first component of a unique package name is always written in all-lowercase ASCII letters and should be one of the top level domain names, such as com, edu, gov, mil, net, or org, or one of the English two-letter codes identifying countries as specified in ISO Standard 3166. The name of a package is not meant to imply where the package is stored on the Internet. The suggested convention for generating unique package names is merely a way to piggyback a package naming convention on top of an existing, widely known unique name registry instead of having to create a separate registry for package names. [...] Names of class types should be descriptive nouns or noun phrases, not overly long, in mixed case with the first letter of each word capitalized.
+.. topic:: Java Language Specification states: 
+  
+  You form a unique package name by first having (or belonging to an organization that has) an Internet domain name, such as oracle.com.
+  You then reverse this name, component by component, to obtain, in this example, com.oracle, and use this as a prefix for your package names, 
+  using a convention developed within your organization to further administer package names.
+   
+  Such a convention might specify that certain package name components be division, department, project, machine, or login names. 
+  
+  The first component of a unique package name is always written in all-lowercase ASCII letters and should be one of the top level domain names, 
+  such as com, edu, gov, mil, net, or org, or one of the English two-letter codes identifying countries as specified in ISO Standard 3166. 
+  
+  The name of a package is not meant to imply where the package is stored on the Internet. 
+  
+  The suggested convention for generating unique package names is merely a way to piggyback a package naming convention on top of an existing, 
+  widely known unique name registry instead of having to create a separate registry for package names. 
+  
+  [...] 
+  
+  Names of class types should be descriptive nouns or noun phrases, not overly long, in mixed case with the first letter of each word capitalized.
 
-::
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 4   
+
 
    Name: Test SimpleVM
    
 Display name of an application. You will be able to reset a display name when you upload SimpleVM package to Murano.
 
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 5   
+
 
    Description: |  
     This is a simple test app with a single VM.
    Author: 'Mirantis, Inc'
+
 Self-descriptive piece of code, but lets's take a note on the syntax.
 
 * ``|`` - vertical line symbol comes from YAML syntax. It means that all the leading indents should be preserved. This is very useful for long, multy-line descriptions.
@@ -142,7 +181,9 @@ Self-descriptive piece of code, but lets's take a note on the syntax.
 
 .. warning:: Avoid TAB symbols inside yaml files. If yaml contains a TAB symbol, if will not be parsed correctly. The error message may be criptic or misleading
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 8   
 
    Tags: [test] 
    
@@ -150,20 +191,28 @@ This is array of tags. You can search an application by its tag.
 You may want to specify several tags for one application ``Tags: [test, Web]``
 YAML offers two equivalent syntaxes to write an array
 
-::
+.. raw:: html
 
+   <pre class="sample">
    Tags: [test, Web]
+   </pre>
 
 is the same as
 
-::
+.. raw:: html
+
+   <pre class="sample">
 
    Tags:
      - test
      - Web
+
+   </pre>
      
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 9
 
    Classes:
     io.murano.apps.test.SimpleVM: SimpleVM.yaml
@@ -175,11 +224,14 @@ is defined in the file ``SimpleVM.yaml``
 If you had another class, say, ``io.murano.apps.test.ComplexAction``defined in file ``ComplexAction.yaml``
 your Classes section would be
 
-::
+.. raw:: html
+
+   <pre class="sample">
 
    Classes:
     io.murano.apps.test.SimpleVM: SimpleVM.yaml
     io.murano.apps.test.ComplexAction: ComplexAction.yaml
+   </pre>
     
 From syntax point of view, this is the example of YAML Associative array aka dictionary. 
 Similar to array, it has one-line (== inline) syntax
@@ -205,7 +257,11 @@ See more details about Murano Classes in the section:  :ref:`simple_vm_yaml_labe
 Classes/SimpleVM.yaml
 _____________________
 
-**Classes/SimpleVM.yaml**::
+**Classes/SimpleVM.yaml**
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
 
    Namespaces:
      =: io.murano.apps.test
@@ -309,7 +365,9 @@ https://github.com/gokrokvertskhov/murano-trainings/blob/master/Day_1/io.murano.
 
 Let's inspect it line-by-line:
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
 
    Namespaces:
      =: io.murano.apps.test
@@ -319,15 +377,25 @@ Let's inspect it line-by-line:
      apps: io.murano.apps
 
 Namespaces in Murano are like namespaces in XML.
-Default namespace ``=:`` 
+Default namespace is denoted as ``=:``. It means "if a namespace is not specify, assume that it is ``io.murano.apps.test`` "  
+For example, ``Name: SimpleVM`` is equivalent to ``Name: io.murano.apps.test.SimpleVM``, 
+because the name space is ommitted and default namespace is used.
 
-::
+Non-default namespace is specified as mapping ``<namespece short alias>: <namespace full name>``. For example, 
+``std: io.murano`` means "assume the namespace is ``io.murano`` whereever ``std:`` is used". 
+Thus, ``Extends: std:Application`` is equivalent to ``Extends: io.murano.Application`` 
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 10   
    
    Name: SimpleVM 
    
-The name of the current class. Default namespace is ommitted.
+The name of the current class. Default namespace is ommitted. The full name is ``io.murano.apps.test.SimpleVM``.
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 17   
       
    Extends: std:Application  
    
@@ -335,12 +403,28 @@ This clause specifies, that class ``io.murano.apps.test.SimpleVM`` inherits from
 MuranoPL allows multiple inheritance. In case if you class inhrerits from several classes, pass them as an array.
 Please note, that this code will cause parsing error ``Extends: [std:Application, base:MyBasicVM]`` bacause in contains ``:``
 Either pass the  fully-qualified class names as ``Extends: [io.murano.Application, io.murano.mybase.MyBasicVM]`` 
-or use ``-`` array syntax::
+or use ``-`` array syntax
+
+.. raw:: html
+
+   <pre class="sample">
    
    Extends: 
      - std:Application
      - base:MyBasicVM  
+   </pre>
+
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 19   
+
    
+   Properties: 
+     name:
+       Contract: $.string().notNull() 
+       
+
 Then goes the section that describes class's properties.
 All properties are "public" - you can reach and read them outside the instance of SimpleVM class.
 There are various types of properties. In this example we have only ``In`` and ``Out`` types of properties.
@@ -348,12 +432,6 @@ There are various types of properties. In this example we have only ``In`` and `
 Let's take a look at the ``In`` properties: ``name`` and ``instance``. 
 We do not specify their type explicitly, so they gat default type which is ``In``
 
-::
-   
-   Properties: 
-     name:
-       Contract: $.string().notNull() 
-       
 The sign ``$`` denotes current context. In this case it is the ``name`` property of current instance of SimpleVM class   ??? == $this.name.string().notNull()
 The Contract clause enforces that the ``name`` is a non-empty string.
 This is how it works: 
@@ -366,7 +444,9 @@ notNull() function throws error, if value is null, otherwise returns the value i
 
 ``instance`` property is a non-null objects, that represents Virtual VM (==aka instance you see in Murano dashboard)
 
-::   
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 23      
 
      instance:
        Contract: $.class(res:Instance).notNull()
@@ -384,7 +464,9 @@ Thus we have two independent object hierarchies: Inherinace and Owner, plus a gr
 Class has constructor new that creates instances of this class
 
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 26   
      
      host:
        Contract: $.string()
@@ -397,7 +479,9 @@ Class has constructor new that creates instances of this class
 The properties ``host`` and  ``user`` are ``Out`` properties. The methods of this class will set value to them. 
 Let's take a look at the first of the methods, ``initialize``
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 36   
 
    Methods:
      initialize:
@@ -421,7 +505,9 @@ It is the same as ``$this.environment``
 Function ``require()`` verifies if ``find()`` function returns any value. If no value is returned, it throws ``error``. 
 
 
-::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 42
  
      deploy: 
        Body:
@@ -431,8 +517,10 @@ It is inherited from ``murano.io.Application``.
 The ``deploy`` method has no parameters, but MuranoPL methods may take parameters
 .. todo:: add reference to the example of a method thattaked parameters
 
-::
-
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 50   
+    
          - If: not $.getAttr(deployed, false)
            Then:
            
@@ -447,8 +535,10 @@ $.getAttr(name, default_value) - gets attribute from the Object model
 $.setAttr(name, value) - store attribute value in the Object Model
 Only basic types are supported (boolean, int, string)
          
-::
-   
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 55   
+        
              - $.environment.reporter.report($this, 'Creating a VM ')
 
 This is a log method to send status log message back to UI
@@ -462,7 +552,9 @@ If error happens, Murano will not propagate error message to the UI.
 That's why it is impotant to generate abundant log messages.
 
 
- :: 
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 57   
    
              # Security groups object is a list of dicts [{}]
              # each dict element in this list should have following key:value entries:
@@ -484,8 +576,10 @@ MuranoPL approach is to pass a structure, not a service class.
 In the code sample above,  the method ``addGroupIngress($securityGroupIngress)`` expects array that contains one item, the item type is dictionary.
 This method asks Heat to create a new SecurityGroup. The method returns when Secuity Group is created.
 
-::
-
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 70
+     
              # Now lets ask our instance to deploy itself.
              # Inside deploy method there are additional steps which configure networks for the environment
              - $.instance.deploy()
@@ -493,8 +587,10 @@ This method asks Heat to create a new SecurityGroup. The method returns when Sec
 The variable ``$.instance`` is type Instance, it is defined here: http://murano.readthedocs.org/en/latest/murano_pl/core_classes.html#class-instance             
 This method asks  Heat to create a a new Virtual Machine and returns whenmachine is created.
 
-::
-
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 73 
+     
              - $.environment.reporter.report($this, 'The new VM is created')
              # Save host information to local variables
              - $.host: $.instance.ipAddresses[0]
@@ -503,15 +599,19 @@ This method asks  Heat to create a a new Virtual Machine and returns whenmachine
 The code above sets OUT properties: ``host`` and ``user``. Please note the syntax difference between class properties and local variables:
 ``$.class_property_name`` vs. ``$local_variable_name``: class property has the prefix "."
 
- ::
- 
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 77   
+
              # Format log message based on variables values
              - $msg: format('{0}@{1}', $.user, $.host)
              - $.environment.reporter.report($this, 'The VM is available ' + $msg)
 
 The code sample above is a very useful example of how to log some values to UI
 
- ::
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 80   
  
              - $.setAttr(deployed, true) 
             
@@ -519,8 +619,10 @@ The code sample above is a very useful example of how to log some values to UI
 
 
 
-::
-   
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 82   
+        
      restartVM:
        Usage: Action
        Body:
@@ -538,8 +640,12 @@ The code sample above is a very useful example of how to log some values to UI
    
 .. todo:: describe action method
 
-**Resources/Restart.template**::
+**Resources/Restart.template**
 
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
+     
    FormatVersion: 2.0.0
    Version: 1.0.0
    Name: Restart VM
@@ -568,15 +674,25 @@ Let's inspect it line-by-line:
 
 .. todo:: add the section
 
-**Resources/scripts/restart.sh**::
+**Resources/scripts/restart.sh**
+
+
+.. code-block:: bash
+   :linenos:
+   :lineno-start: 1   
 
    #!/bin/bash
    shutdown -r $1
 
 Source code: https://github.com/gokrokvertskhov/murano-trainings/blob/master/Day_1/io.murano.apps.test.SimpleVM/Resources/scripts/restart.sh
 
-**UI/ui.yaml**::
+**UI/ui.yaml**
 
+
+.. code-block:: yaml
+   :linenos:
+   :lineno-start: 1   
+   
    Version: 2
    
    Application:
